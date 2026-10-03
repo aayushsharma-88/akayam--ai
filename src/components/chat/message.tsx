@@ -4,6 +4,7 @@ import { useState, useCallback, useRef, useEffect } from 'react'
 import { Copy, RefreshCw, ThumbsUp, ThumbsDown, Volume2, Check, Loader2, Square } from 'lucide-react'
 import { MarkdownRenderer } from './markdown-renderer'
 import { ButterflyAnimation } from '@/components/animations/butterfly'
+import { AkayamLogo } from '@/components/brand/logo'
 import { cn } from '@/lib/utils'
 
 interface Msg {
@@ -118,7 +119,7 @@ export function ChatMessage({ message, onCopy, onRegenerate }: ChatMessageProps)
   if (isUser) {
     return (
       <div className="flex justify-end w-full">
-        <div className="max-w-[80%] sm:max-w-[70%] px-4 py-3 rounded-2xl rounded-br-md bg-[#1C2433] border border-white/8 text-white/90 text-[15px] leading-relaxed shadow-sm">
+        <div className="max-w-[80%] sm:max-w-[70%] px-4 py-3 rounded-2xl rounded-br-md bg-black/40 backdrop-blur-md border border-white/20 text-white drop-shadow-md font-medium text-[15px] leading-relaxed shadow-lg">
           {message.content}
         </div>
       </div>
@@ -128,22 +129,11 @@ export function ChatMessage({ message, onCopy, onRegenerate }: ChatMessageProps)
   // AI message
   return (
     <div className="flex gap-3 w-full group">
-      {/* Akayam avatar */}
-      <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 relative">
-        {/* Subtle glow behind the avatar matching the golden theme */}
-        <div className="absolute inset-0 bg-yellow-500/10 rounded-full blur-[6px]" />
-        <img 
-          src="/ai-avatar.png" 
-          alt="Akayam" 
-          className="w-10 h-10 object-contain relative z-10 mix-blend-screen scale-125 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]"
-        />
-      </div>
-
-      <div className="flex-1 min-w-0">
+      {/* Akayam avatar */} <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 shadow-lg rounded-full bg-black/40 backdrop-blur-md border border-white/20 p-1"> <AkayamLogo size="sm" showText={false} /> </div> <div className="flex-1 min-w-0 max-w-[85%] sm:max-w-[80%] px-4 py-3 rounded-2xl rounded-bl-md bg-black/40 backdrop-blur-md border border-white/20 shadow-lg">
         {/* Content */}
         <div className={cn(
           'text-[15px] leading-relaxed',
-          message.isError ? 'text-red-400' : 'text-white/90'
+          message.isError ? 'text-red-400' : 'text-white drop-shadow-md font-medium text-[15px]'
         )}>
           {message.isStreaming && message.content === '' ? ( <div className="pt-2"><ButterflyAnimation state="thinking" /></div> ) : (
             <MarkdownRenderer content={message.content} />
@@ -215,4 +205,6 @@ function ActionBtn({ icon, label, onClick, active }: {
     </button>
   )
 }
+
+
 

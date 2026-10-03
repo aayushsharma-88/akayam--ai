@@ -218,12 +218,12 @@ export function ChatInterface({ conversation, user }: ChatInterfaceProps) {
   }, [])
 
   return (
-    <div className="flex-1 flex flex-col h-full overflow-hidden bg-[#080A0F] relative">
+    <div className="flex-1 flex flex-col h-full overflow-hidden bg-cover bg-center bg-no-repeat bg-fixed relative" style={{ backgroundImage: "url(/chat-bg.jpg)" }}> <div className="absolute inset-0 bg-black/30 pointer-events-none" />
       {/* Auto-send pending message from home screen */}
       <PendingMessageSender conversationId={conversation.id} onSend={sendMessage} />
 
       {/* Top fade */}
-      <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#080A0F] to-transparent z-10 pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-black/80 to-transparent backdrop-blur-[2px] z-10 pointer-events-none" />
 
       {/* Messages */}
       <div
@@ -232,7 +232,7 @@ export function ChatInterface({ conversation, user }: ChatInterfaceProps) {
       >
         <div className="max-w-3xl mx-auto flex flex-col gap-6">
           {messages.length === 0 && (
-            <div className="flex flex-col items-center justify-center mt-24 gap-4 text-center">
+            <div className="flex flex-col items-center justify-center mt-24 gap-4 text-center p-8 rounded-3xl bg-black/20 backdrop-blur-md border border-white/10">
               <AkayamLogo size="md" showText={false} />
               <p className="text-sm text-white/30">Send a message to begin</p>
             </div>
@@ -254,7 +254,7 @@ export function ChatInterface({ conversation, user }: ChatInterfaceProps) {
       </div>
 
       {/* Input overlay */}
-      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#080A0F] via-[#080A0F]/95 to-transparent pt-12 pb-5 px-4 sm:px-6 z-20">
+      <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent backdrop-blur-[2px] pt-12 pb-5 px-4 sm:px-6 z-20">
         <div className="max-w-3xl mx-auto w-full">
           <InputBar
             onSubmit={sendMessage}
@@ -271,4 +271,6 @@ export function ChatInterface({ conversation, user }: ChatInterfaceProps) {
     </div>
   )
 }
+
+
 

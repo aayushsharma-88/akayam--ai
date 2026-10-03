@@ -3,8 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  Plus, Search, MessageSquare, FolderOpen, BookOpen,
+import { Menu, Plus, Search, MessageSquare, FolderOpen, BookOpen,
   Settings, ChevronRight, Pin, Trash2, MoreHorizontal, X, Volume2
 } from 'lucide-react'
 import Link from 'next/link'
@@ -60,6 +59,7 @@ function groupConversations(conversations: Conversation[]) {
 export function AppSidebar({ user }: SidebarProps) {
   const router = useRouter()
   const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
   const [conversations, setConversations] = useState<Conversation[]>([])
   const [search, setSearch] = useState('')
   const [isCreating, setIsCreating] = useState(false)
@@ -131,7 +131,7 @@ export function AppSidebar({ user }: SidebarProps) {
   ]
 
   return (
-    <aside className="flex flex-col h-full border-r border-white/6 bg-[#0A0D14] w-[260px] flex-shrink-0 relative z-30">
+    <> <button onClick={() => setIsOpen(!isOpen)} className="fixed top-4 left-4 z-40 p-2 rounded-xl bg-black/40 backdrop-blur-md border border-white/20 text-white shadow-lg hover:bg-black/60 transition-all"> <Menu size={20} /> </button> {isOpen && ( <div className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm transition-opacity" onClick={() => setIsOpen(false)} /> )} <aside className={cn("fixed inset-y-0 left-0 flex flex-col h-full border-r border-white/10 bg-[#0A0D14]/90 backdrop-blur-xl w-[260px] flex-shrink-0 z-50 transform transition-transform duration-300 ease-in-out", isOpen ? "translate-x-0" : "-translate-x-full")} >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-4 border-b border-white/5">
         <Link href="/" className="hover:opacity-80 transition-opacity">
@@ -289,5 +289,12 @@ export function AppSidebar({ user }: SidebarProps) {
         </Link>
       </div>
     </aside>
+    </>
   )
 }
+
+
+
+
+
+
