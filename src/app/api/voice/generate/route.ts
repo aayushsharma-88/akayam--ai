@@ -23,9 +23,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Text cannot be empty' }, { status: 400 })
     }
 
-    const hash = crypto.createHash('sha256').update(${textToSpeak}--gemini-v1.0).digest('hex')
-    const cacheKey = 	ts_.mp3
-    const storagePath = udio/voice/
+    const hash = crypto.createHash('sha256').update(`${textToSpeak}-${voice}-gemini-v1.0`).digest('hex')
+    const cacheKey = `tts_${hash}.mp3`
+    const storagePath = `audio/voice/${cacheKey}`
 
     const existingFile = await prisma.file.findFirst({
       where: { storageKey: storagePath, fileType: 'AUDIO' }
@@ -33,7 +33,7 @@ export async function POST(req: Request) {
 
     if (existingFile) {
       return NextResponse.json({ 
-        url: /api/files/serve/ 
+        url: `/api/files/serve/${encodeURIComponent(existingFile.storageKey)}` 
       })
     }
 
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ 
-      url: /api/files/serve/ 
+      url: `/api/files/serve/${encodeURIComponent(dbFile.storageKey)}` 
     })
 
   } catch (error: any) {
