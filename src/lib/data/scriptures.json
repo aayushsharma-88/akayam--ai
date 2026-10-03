@@ -2,7 +2,7 @@
   "gita": {
     "id": "gita",
     "name": "Bhagavad Gita",
-    "titleHindi": "????????????????",
+    "titleHindi": "श्रीमद्भगवद्गीता",
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Krishna_and_Arjuna_at_Kurukshetra.jpg/800px-Krishna_and_Arjuna_at_Kurukshetra.jpg",
     "themeGlow": "from-orange-500/50 via-amber-500/40 to-yellow-500/50",
     "intro": "The Bhagavad Gita is a 700-verse Hindu scripture that is part of the epic Mahabharata. It is a narrative framework of a dialogue between Pandava prince Arjuna and his guide and charioteer Krishna.",
@@ -20,13 +20,13 @@
       {
         "chapter": "Chapter 2, Verse 47",
         "title": "The Core of Karma Yoga",
-        "sanskrit": "??????????????????? ?? ????? ??????\n?? ?????????????????? ?? ??????????????????",
+        "sanskrit": "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन।\nमा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥",
         "content": "You have a right to perform your prescribed duty, but you are not entitled to the fruits of action. Never consider yourself the cause of the results of your activities, and never be attached to not doing your duty."
       },
       {
         "chapter": "Chapter 2, Verse 22",
         "title": "The Eternal Soul",
-        "sanskrit": "??????? ???????? ??? ????? ????? ???????? ??????????\n??? ??????? ????? ?????? ????????? ?????? ????? ?????",
+        "sanskrit": "वासांसि जीर्णानि यथा विहाय नवानि गृह्णाति नरोऽपराणि।\nतथा शरीराणि विहाय जीर्णा न्यन्यानि संयाति नवानि देही॥",
         "content": "As a person puts on new garments, giving up old ones, the soul similarly accepts new material bodies, giving up the old and useless ones."
       },
       {
@@ -42,8 +42,8 @@
       {
         "chapter": "Chapter 4, Verse 7-8",
         "title": "Descent of the Divine",
-        "sanskrit": "??? ??? ?? ??????? ???????????? ?????\n?????????????????? ????????? ???????????\n?????????? ??????? ??????? ? ???????????\n?????????????????? ???????? ???? ?????",
-        "content": "Whenever and wherever there is a decline in religious practice, O descendant of Bharata, and a predominant rise of irreligion�at that time I descend Myself. To deliver the pious and to annihilate the miscreants, as well as to reestablish the principles of religion, I Myself appear, millennium after millennium."
+        "sanskrit": "यदा यदा हि धर्मस्य ग्लानिर्भवति भारत।\nअभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्॥\nपरित्राणाय साधूनां विनाशाय च दुष्कृताम्।\nधर्मसंस्थापनार्थाय सम्भवामि युगे युगे॥",
+        "content": "Whenever and wherever there is a decline in religious practice, O descendant of Bharata, and a predominant rise of irreligion—at that time I descend Myself. To deliver the pious and to annihilate the miscreants, as well as to reestablish the principles of religion, I Myself appear, millennium after millennium."
       },
       {
         "chapter": "Chapter 6",
@@ -63,7 +63,7 @@
       {
         "chapter": "Chapter 18, Verse 66",
         "title": "The Ultimate Surrender",
-        "sanskrit": "???????????????????? ?????? ???? ?????\n??? ????? ???????????? ????????????? ?? ?????",
+        "sanskrit": "सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज।\nअहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः॥",
         "content": "Abandon all varieties of religion and just surrender unto Me. I shall deliver you from all sinful reactions. Do not fear."
       }
     ]
@@ -71,7 +71,7 @@
   "shivpurana": {
     "id": "shivpurana",
     "name": "Shiv Mahapurana",
-    "titleHindi": "??? ????????",
+    "titleHindi": "शिव महापुराण",
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Shiva_Ravi_Varma.jpg/800px-Shiva_Ravi_Varma.jpg",
     "themeGlow": "from-blue-600/50 via-cyan-500/40 to-teal-500/50",
     "intro": "The Shiva Purana is one of the eighteen major Puranas of Hinduism. It centers around the Hindu god Shiva and goddess Parvati, containing extensive cosmology, mythology, and philosophy.",
@@ -101,7 +101,7 @@
   "vedas": {
     "id": "vedas",
     "name": "The Vedas",
-    "titleHindi": "??? (?????? ??? ??????)",
+    "titleHindi": "वेद (ऋग्वेद एवं उपनिषद)",
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Rigveda_manuscript_page_in_Sanskrit_on_paper%2C_early_19th_century.jpg/800px-Rigveda_manuscript_page_in_Sanskrit_on_paper%2C_early_19th_century.jpg",
     "themeGlow": "from-amber-600/50 via-orange-500/40 to-red-500/50",
     "intro": "The Vedas are a large body of religious texts originating in ancient India. Composed in Vedic Sanskrit, the texts constitute the oldest layer of Sanskrit literature and the oldest scriptures of Hinduism.",
@@ -109,25 +109,25 @@
       {
         "chapter": "Rigveda 1.164.46",
         "title": "The Truth is One",
-        "sanskrit": "??? ????????? ????? ??????",
+        "sanskrit": "एकं सद्विप्रा बहुधा वदन्ति",
         "content": "Ekam sat vipra bahudha vadanti - Truth is one, but the wise speak of it in many ways. This establishes the underlying unity of all divine manifestations."
       },
       {
         "chapter": "Maha Vakyas",
         "title": "Aham Brahmasmi (Brihadaranyaka Upanishad)",
-        "sanskrit": "??? ???????????",
+        "sanskrit": "अहं ब्रह्मास्मि",
         "content": "I am Brahman. This profound statement indicates the identity of the individual soul (Atman) with the universal absolute (Brahman)."
       },
       {
         "chapter": "Maha Vakyas",
         "title": "Tat Tvam Asi (Chandogya Upanishad)",
-        "sanskrit": "??? ????? ???",
+        "sanskrit": "तत् त्वम् असि",
         "content": "Thou Art That. Meaning that the true self within you is the same as the ultimate reality of the universe."
       },
       {
         "chapter": "Rigveda",
         "title": "Gayatri Mantra",
-        "sanskrit": "? ???????? ?????\n????????????????? ????? ?????? ??????\n???? ?? ?? ???????????",
+        "sanskrit": "ॐ भूर्भुवः स्वः।\nतत्सवितुर्वरेण्यं भर्गो देवस्य धीमहि।\nधियो यो नः प्रचोदयात्॥",
         "content": "We meditate upon the spiritual effulgence of that adorable supreme divine reality, who is the source of the physical, astral and heavenly spheres of existence. May that supreme divine being enlighten our intellect."
       }
     ]
