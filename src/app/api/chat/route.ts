@@ -287,8 +287,22 @@ export async function POST(req: NextRequest) {
           }
 
         } catch (streamError: any) {
-          const errMsg = streamError?.message || 'Something went wrong while generating your response. Please try again.'
-          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content: errMsg, error: true })}\n\n`))
+          let errMsg = streamError?.message || 'Something went wrong while generating your response. Please try again.'
+          
+          if (errMsg.includes('429') || errMsg.includes('quota') || errMsg.includes('RESOURCE_EXHAUSTED')) {
+            errMsg = "⚠️ **API Limit Reached**\n\nThe free tier quota for this AI model has been exhausted. To enable unlimited chats, the project owner needs to upgrade the Gemini API key to a Pay-as-you-go plan in Google AI Studio. Please try again later!"
+          } else if (errMsg.startsWith('{')) {
+            try {
+              const parsed = JSON.parse(errMsg)
+              if (parsed.error && parsed.error.message) {
+                errMsg = parsed.error.message
+              }
+            } catch (e) {
+              // ignore
+            }
+          }
+
+          controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content: '\n\n' + errMsg, error: true })}\n\n`))
           controller.enqueue(encoder.encode('data: [DONE]\n\n'))
           controller.close()
           console.error('[chat stream error]', streamError)
