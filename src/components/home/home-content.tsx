@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Camera, Image as ImageIcon, Film, Mic, BarChart2, PenTool, Code2, FileText } from 'lucide-react'
 import { InputBar } from '@/components/chat/input-bar'
-import { AkayamLogo } from '@/components/brand/logo'
 import { cn } from '@/lib/utils'
 import type { AuthUser } from '@/lib/auth/auth.types'
 
@@ -22,13 +21,6 @@ const QUICK_ACTIONS = [
   { icon: Code2,    label: 'Code',             gradient: 'from-indigo-500/20 to-violet-500/20', color: 'text-indigo-400', prompt: 'write code to ' },
   { icon: FileText, label: 'Upload Document',  gradient: 'from-cyan-500/20 to-blue-500/20',     color: 'text-cyan-400',   prompt: 'draft a message like ' },
 ]
-
-function getGreeting() {
-  const h = new Date().getHours()
-  if (h < 12) return 'Good morning'
-  if (h < 18) return 'Good afternoon'
-  return 'Good evening'
-}
 
 export function HomeContent({ user }: HomeContentProps) {
   const router = useRouter()
@@ -73,15 +65,26 @@ export function HomeContent({ user }: HomeContentProps) {
     <div className="flex-1 flex flex-col h-full items-center justify-center p-4 sm:p-8 overflow-y-auto">
       <div className="w-full max-w-3xl flex flex-col items-center gap-8 -mt-12">
 
-        {/* Logo + Greeting */}
-        <div className="flex flex-col items-center text-center gap-3">
-          <AkayamLogo size="lg" showText={false} />
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mt-2">
-            {getGreeting()}{firstName ? (
+        {/* Saraswati Mata + Greeting */}
+        <div className="flex flex-col items-center text-center gap-4">
+          <div className="relative animate-float mt-2 mb-2">
+            {/* Soft glowing aura matching Akayam colors */}
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/40 via-blue-500/30 to-violet-500/40 blur-[50px] rounded-full animate-pulse-glow" />
+            
+            {/* mix-blend-screen removes the black background and brightens the white lines */}
+            <img 
+              src="/saraswati.png" 
+              alt="Saraswati Mata" 
+              className="w-40 h-40 sm:w-48 sm:h-48 object-contain relative z-10 mix-blend-screen opacity-90 drop-shadow-[0_0_15px_rgba(96,212,245,0.6)]"
+            />
+          </div>
+
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mt-1">
+            स्वागतम् (Swagatam){firstName ? (
               <>, <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-violet-400">{firstName}</span></>
             ) : null}
           </h1>
-          <p className="text-sm text-white/35 max-w-sm">
+          <p className="text-sm text-white/40 max-w-sm mt-1">
             How can Akayam help you today?
           </p>
         </div>
