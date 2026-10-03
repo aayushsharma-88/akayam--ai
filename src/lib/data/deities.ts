@@ -1,23 +1,41 @@
+import scripturesData from './scriptures.json';
+
 export interface Mantra {
   sanskrit: string;
   roman: string;
   meaning: string;
 }
 
-export interface Deity {
+export interface Lesson {
+  chapter: string;
+  title: string;
+  content: string;
+  sanskrit?: string;
+}
+
+export interface DivineEntity {
   id: string;
+  type: 'deity' | 'scripture';
   name: string;
   titleHindi: string;
   image: string;
   themeGlow: string;
   intro: string;
-  katha: string;
-  mantras: Mantra[];
+  katha?: string;
+  mantras?: Mantra[];
+  lessons?: Lesson[];
 }
 
-export const deities: Record<string, Deity> = {
+// Ensure the JSON conforms to the type (it does implicitly, but we'll cast it)
+const scripturesObj: Record<string, any> = scripturesData;
+Object.keys(scripturesObj).forEach(k => {
+  scripturesObj[k].type = 'scripture';
+});
+
+export const deities: Record<string, DivineEntity> = {
   saraswati: {
     id: 'saraswati',
+    type: 'deity',
     name: 'Saraswati',
     titleHindi: '??? ???????',
     image: '/saraswati.png',
@@ -39,9 +57,10 @@ export const deities: Record<string, Deity> = {
   },
   ganesh: {
     id: 'ganesh',
+    type: 'deity',
     name: 'Ganesh',
     titleHindi: '????? ????',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ganesha_Om.svg/512px-Ganesha_Om.svg.png', // Temporary SVG placeholder
+    image: 'https://upload.wikimedia.org/wikipedia/commons/9/90/Ganesha_Basohli_miniature_circa_1730_Dubost_p73.jpg',
     themeGlow: 'from-orange-500/50 via-red-500/40 to-yellow-500/50',
     intro: 'Lord Ganesha is the widely revered remover of obstacles, the patron of arts and sciences, and the deva of intellect and wisdom.',
     katha: 'Ganesha was created by Goddess Parvati from turmeric paste to guard her door. When Shiva returned and was denied entry by Ganesha, a battle ensued resulting in Ganesha losing his head. To console a heartbroken Parvati, Shiva replaced Ganesha\'s head with that of an elephant, blessing him to be worshipped first in every new undertaking.',
@@ -50,19 +69,15 @@ export const deities: Record<string, Deity> = {
         sanskrit: '? ?? ?????? ???',
         roman: 'Om Gam Ganapataye Namaha',
         meaning: 'I bow down to the almighty Ganesha.'
-      },
-      {
-        sanskrit: '????????? ?????? ????????? ???????\n?????????? ???? ?? ??? ???????????? ???????',
-        roman: 'Vakratunda Mahakaya Surya Koti Samaprabha,\nNirvighnam Kuru Me Deva Sarva Karyeshu Sarvada.',
-        meaning: 'O Lord with a curved trunk and a massive body, whose splendor is equal to millions of suns, please bless me so that I do not face any obstacles in my endeavors.'
       }
     ]
   },
   shiva: {
     id: 'shiva',
+    type: 'deity',
     name: 'Shiva',
     titleHindi: '????? ???',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Om_symbol.svg/512px-Om_symbol.svg.png',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Shiva_Ravi_Varma.jpg/800px-Shiva_Ravi_Varma.jpg',
     themeGlow: 'from-blue-500/50 via-cyan-500/40 to-indigo-500/50',
     intro: 'Lord Shiva is the Supreme Being in Shaivism. He is the destroyer and transformer within the Trimurti, representing pure consciousness and cosmic meditation.',
     katha: 'Shiva is often portrayed as an ascetic yogi on Mount Kailash, as well as a householder with Goddess Parvati and his two children, Ganesha and Kartikeya. He swallowed the Halahala poison churned from the cosmic ocean to save the universe, earning the name Neelakantha (The Blue-Throated One).',
@@ -71,19 +86,15 @@ export const deities: Record<string, Deity> = {
         sanskrit: '? ??? ?????',
         roman: 'Om Namah Shivaya',
         meaning: 'I bow to Lord Shiva / I bow to my inner self.'
-      },
-      {
-        sanskrit: '?????????? ?????? ???????? ??????????????\n??????????? ??????????????????????? ??????????',
-        roman: 'Om Tryambakam Yajamahe Sugandhim Pushtivardhanam,\nUrvarukamiva Bandhanan Mrityormukshiya Maamritat.',
-        meaning: 'We worship the Three-eyed Lord who is fragrant and who nourishes all beings. May He liberate us from death for the sake of immortality, even as a cucumber is severed from its bondage to the creeper.'
       }
     ]
   },
   krishna: {
     id: 'krishna',
+    type: 'deity',
     name: 'Krishna',
     titleHindi: '????? ?????',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Aum_Om_red.svg/512px-Aum_Om_red.svg.png',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Krishna_with_flute_and_cows.jpg/800px-Krishna_with_flute_and_cows.jpg',
     themeGlow: 'from-blue-400/50 via-purple-500/40 to-pink-500/50',
     intro: 'Lord Krishna is the eighth avatar of Vishnu, revered as the supreme deity in Hinduism. He is the embodiment of love, joy, and divine wisdom.',
     katha: 'Krishna was born in Mathura to Devaki and Vasudeva. He gave the discourse of the Bhagavad Gita on the battlefield of Kurukshetra to Prince Arjuna, teaching the paths of Bhakti, Karma, and Jnana yoga.',
@@ -97,9 +108,10 @@ export const deities: Record<string, Deity> = {
   },
   hanuman: {
     id: 'hanuman',
+    type: 'deity',
     name: 'Hanuman',
     titleHindi: '????? ??????',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/7c/Om_symbol_in_Devanagari.svg/512px-Om_symbol_in_Devanagari.svg.png',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Hanuman_fetches_the_herb-bearing_mountain.jpg/800px-Hanuman_fetches_the_herb-bearing_mountain.jpg',
     themeGlow: 'from-red-500/50 via-orange-500/40 to-yellow-500/50',
     intro: 'Lord Hanuman is the greatest devotee of Lord Rama. He symbolizes strength, devotion, and selfless service.',
     katha: 'Hanuman leaped across the ocean to Lanka to find Mata Sita. He carried the Sanjeevani mountain to save Lakshmana\'s life and is considered an immortal (Chiranjeevi) who protects his devotees from negativity.',
@@ -113,9 +125,10 @@ export const deities: Record<string, Deity> = {
   },
   durga: {
     id: 'durga',
+    type: 'deity',
     name: 'Durga',
     titleHindi: '??? ??????',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Om_symbol.svg/512px-Om_symbol.svg.png',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e4/Durga_Mahishasuramardini.jpg/800px-Durga_Mahishasuramardini.jpg',
     themeGlow: 'from-red-600/50 via-rose-500/40 to-pink-600/50',
     intro: 'Maa Durga is the principal form of the Mother Goddess, associated with protection, strength, motherhood, and the destruction of evil.',
     katha: 'Durga was created by the combined anger and power of the Trimurti to slay the buffalo demon Mahishasura. She rides a lion or tiger, carrying weapons given by all the gods.',
@@ -129,9 +142,10 @@ export const deities: Record<string, Deity> = {
   },
   lakshmi: {
     id: 'lakshmi',
+    type: 'deity',
     name: 'Lakshmi',
     titleHindi: '??? ???????',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/07/Aum_Om_red.svg/512px-Aum_Om_red.svg.png',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Raja_Ravi_Varma_-_Mahalakshmi.jpg/800px-Raja_Ravi_Varma_-_Mahalakshmi.jpg',
     themeGlow: 'from-pink-500/50 via-rose-400/40 to-red-400/50',
     intro: 'Maa Lakshmi is the goddess of wealth, fortune, power, beauty, fertility, and prosperity.',
     katha: 'Lakshmi emerged from the churning of the cosmic ocean (Samudra Manthan) and chose Vishnu as her eternal consort. She incarnates alongside him in all his avatars (like Sita with Rama, and Rukmini with Krishna).',
@@ -145,9 +159,10 @@ export const deities: Record<string, Deity> = {
   },
   ram: {
     id: 'ram',
+    type: 'deity',
     name: 'Ram',
     titleHindi: '????? ???',
-    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Ganesha_Om.svg/512px-Ganesha_Om.svg.png',
+    image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Rama_and_Sita.jpg/800px-Rama_and_Sita.jpg',
     themeGlow: 'from-orange-400/50 via-amber-500/40 to-yellow-500/50',
     intro: 'Lord Rama is the seventh avatar of Vishnu, representing Maryada Purushottam (the perfect man/supreme lord of righteousness).',
     katha: 'Rama\'s life is chronicled in the epic Ramayana. He went into a 14-year exile to honor his father\'s word, defeated the demon king Ravana to rescue his wife Sita, and established Ram Rajya, a period of perfect peace and justice.',
@@ -158,7 +173,8 @@ export const deities: Record<string, Deity> = {
         meaning: 'Victory to Lord Rama.'
       }
     ]
-  }
+  },
+  ...scripturesObj
 };
 
 export const getAllDeities = () => Object.values(deities);

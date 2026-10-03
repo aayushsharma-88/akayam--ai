@@ -1,0 +1,135 @@
+{
+  "gita": {
+    "id": "gita",
+    "name": "Bhagavad Gita",
+    "titleHindi": "????????????????",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Krishna_and_Arjuna_at_Kurukshetra.jpg/800px-Krishna_and_Arjuna_at_Kurukshetra.jpg",
+    "themeGlow": "from-orange-500/50 via-amber-500/40 to-yellow-500/50",
+    "intro": "The Bhagavad Gita is a 700-verse Hindu scripture that is part of the epic Mahabharata. It is a narrative framework of a dialogue between Pandava prince Arjuna and his guide and charioteer Krishna.",
+    "lessons": [
+      {
+        "chapter": "Chapter 1",
+        "title": "Observing the Armies",
+        "content": "Arjuna is overcome with sorrow and confusion as he sees his relatives and teachers in the opposing army. He questions the righteousness of war."
+      },
+      {
+        "chapter": "Chapter 2",
+        "title": "Sankhya Yoga (Contents of the Gita Summarized)",
+        "content": "Krishna begins his teachings, explaining the eternal nature of the soul (Atman) and the temporary nature of the material body. He introduces Karma Yoga (selfless action)."
+      },
+      {
+        "chapter": "Chapter 2, Verse 47",
+        "title": "The Core of Karma Yoga",
+        "sanskrit": "??????????????????? ?? ????? ??????\n?? ?????????????????? ?? ??????????????????",
+        "content": "You have a right to perform your prescribed duty, but you are not entitled to the fruits of action. Never consider yourself the cause of the results of your activities, and never be attached to not doing your duty."
+      },
+      {
+        "chapter": "Chapter 2, Verse 22",
+        "title": "The Eternal Soul",
+        "sanskrit": "??????? ???????? ??? ????? ????? ???????? ??????????\n??? ??????? ????? ?????? ????????? ?????? ????? ?????",
+        "content": "As a person puts on new garments, giving up old ones, the soul similarly accepts new material bodies, giving up the old and useless ones."
+      },
+      {
+        "chapter": "Chapter 3",
+        "title": "Karma Yoga",
+        "content": "Krishna explains that nobody can remain inactive even for a moment. One must perform duties without attachment to the results."
+      },
+      {
+        "chapter": "Chapter 4",
+        "title": "Jnana Karma Sanyasa Yoga",
+        "content": "Krishna reveals that he descends to earth whenever righteousness declines (Yada Yada Hi Dharmasya) to protect the good and destroy evil."
+      },
+      {
+        "chapter": "Chapter 4, Verse 7-8",
+        "title": "Descent of the Divine",
+        "sanskrit": "??? ??? ?? ??????? ???????????? ?????\n?????????????????? ????????? ???????????\n?????????? ??????? ??????? ? ???????????\n?????????????????? ???????? ???? ?????",
+        "content": "Whenever and wherever there is a decline in religious practice, O descendant of Bharata, and a predominant rise of irreligion�at that time I descend Myself. To deliver the pious and to annihilate the miscreants, as well as to reestablish the principles of religion, I Myself appear, millennium after millennium."
+      },
+      {
+        "chapter": "Chapter 6",
+        "title": "Dhyana Yoga",
+        "content": "Focuses on the practice of meditation. Controlling the restless mind is difficult, but it can be achieved by constant practice and detachment."
+      },
+      {
+        "chapter": "Chapter 11",
+        "title": "The Universal Form",
+        "content": "Krishna reveals his Vishvarupa (Universal Form) to Arjuna, showing that all beings, planets, and the entire cosmos exist within Him."
+      },
+      {
+        "chapter": "Chapter 18",
+        "title": "Conclusion - Perfection of Renunciation",
+        "content": "The ultimate surrender. Krishna tells Arjuna to abandon all varieties of religion and simply surrender unto Him."
+      },
+      {
+        "chapter": "Chapter 18, Verse 66",
+        "title": "The Ultimate Surrender",
+        "sanskrit": "???????????????????? ?????? ???? ?????\n??? ????? ???????????? ????????????? ?? ?????",
+        "content": "Abandon all varieties of religion and just surrender unto Me. I shall deliver you from all sinful reactions. Do not fear."
+      }
+    ]
+  },
+  "shivpurana": {
+    "id": "shivpurana",
+    "name": "Shiv Mahapurana",
+    "titleHindi": "??? ????????",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Shiva_Ravi_Varma.jpg/800px-Shiva_Ravi_Varma.jpg",
+    "themeGlow": "from-blue-600/50 via-cyan-500/40 to-teal-500/50",
+    "intro": "The Shiva Purana is one of the eighteen major Puranas of Hinduism. It centers around the Hindu god Shiva and goddess Parvati, containing extensive cosmology, mythology, and philosophy.",
+    "lessons": [
+      {
+        "chapter": "Vidyeshvara Samhita",
+        "title": "The Origin of the Lingam",
+        "content": "The Purana begins with the story of Brahma and Vishnu arguing over who is supreme. An infinite pillar of fire (Jyotirlinga) appears, representing Shiva as the supreme consciousness without beginning or end."
+      },
+      {
+        "chapter": "Rudra Samhita",
+        "title": "The Birth of Kartikeya",
+        "content": "Describes the marriage of Shiva and Parvati, and the birth of Lord Kartikeya, who was destined to defeat the demon Tarkasur."
+      },
+      {
+        "chapter": "Jyotirlinga Katha",
+        "title": "The 12 Jyotirlingas",
+        "content": "The text describes the twelve sacred shrines of Shiva (Somnath, Mallikarjuna, Mahakaleshwar, Omkareshwar, Kedarnath, Bhimashankar, Kashi Vishwanath, Trimbakeshwar, Vaidyanath, Nageshwar, Rameshwar, and Grishneshwar) and the merit of visiting them."
+      },
+      {
+        "chapter": "Uma Samhita",
+        "title": "Devotion and Asceticism",
+        "content": "Emphasizes that true devotion to Shiva does not require wealth or elaborate rituals, but a pure heart and simple offerings like Bilva leaves and water."
+      }
+    ]
+  },
+  "vedas": {
+    "id": "vedas",
+    "name": "The Vedas",
+    "titleHindi": "??? (?????? ??? ??????)",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/Rigveda_manuscript_page_in_Sanskrit_on_paper%2C_early_19th_century.jpg/800px-Rigveda_manuscript_page_in_Sanskrit_on_paper%2C_early_19th_century.jpg",
+    "themeGlow": "from-amber-600/50 via-orange-500/40 to-red-500/50",
+    "intro": "The Vedas are a large body of religious texts originating in ancient India. Composed in Vedic Sanskrit, the texts constitute the oldest layer of Sanskrit literature and the oldest scriptures of Hinduism.",
+    "lessons": [
+      {
+        "chapter": "Rigveda 1.164.46",
+        "title": "The Truth is One",
+        "sanskrit": "??? ????????? ????? ??????",
+        "content": "Ekam sat vipra bahudha vadanti - Truth is one, but the wise speak of it in many ways. This establishes the underlying unity of all divine manifestations."
+      },
+      {
+        "chapter": "Maha Vakyas",
+        "title": "Aham Brahmasmi (Brihadaranyaka Upanishad)",
+        "sanskrit": "??? ???????????",
+        "content": "I am Brahman. This profound statement indicates the identity of the individual soul (Atman) with the universal absolute (Brahman)."
+      },
+      {
+        "chapter": "Maha Vakyas",
+        "title": "Tat Tvam Asi (Chandogya Upanishad)",
+        "sanskrit": "??? ????? ???",
+        "content": "Thou Art That. Meaning that the true self within you is the same as the ultimate reality of the universe."
+      },
+      {
+        "chapter": "Rigveda",
+        "title": "Gayatri Mantra",
+        "sanskrit": "? ???????? ?????\n????????????????? ????? ?????? ??????\n???? ?? ?? ???????????",
+        "content": "We meditate upon the spiritual effulgence of that adorable supreme divine reality, who is the source of the physical, astral and heavenly spheres of existence. May that supreme divine being enlighten our intellect."
+      }
+    ]
+  }
+}
