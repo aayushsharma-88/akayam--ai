@@ -47,7 +47,10 @@ export function DeityPageContent({ deity, allDeities }: Props) {
                   : "hover:bg-white/5 text-white/60 hover:text-white"
               )}
             >
-              <span className="font-medium">{d.name}</span>
+                            <div className="flex items-center gap-3">
+                <img src={d.image} alt={d.name} className="w-8 h-8 rounded-full object-cover border border-white/20" />
+                <span className="font-medium">{d.name}</span>
+              </div>
               <span className="text-xs opacity-70 font-serif">{d.titleHindi}</span>
             </Link>
           ))}
@@ -69,7 +72,10 @@ export function DeityPageContent({ deity, allDeities }: Props) {
                   : "hover:bg-white/5 text-white/60 hover:text-white"
               )}
             >
-              <span className="font-medium">{d.name}</span>
+                            <div className="flex items-center gap-3">
+                <img src={d.image} alt={d.name} className="w-8 h-8 rounded-full object-cover border border-white/20" />
+                <span className="font-medium">{d.name}</span>
+              </div>
               <span className="text-xs opacity-70 font-serif">{d.titleHindi}</span>
             </Link>
           ))}
@@ -226,3 +232,4 @@ export function DeityPageContent({ deity, allDeities }: Props) {
     </div>
   )
 }
+
