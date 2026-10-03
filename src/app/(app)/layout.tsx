@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { requireAuth } from '@/lib/auth/auth-utils'
 import { AppSidebar } from '@/components/sidebar/sidebar'
 import { ToastProvider } from '@/components/ui/toast'
