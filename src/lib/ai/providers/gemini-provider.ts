@@ -28,18 +28,45 @@ export class GeminiProviderError extends Error {
   }
 }
 
-function getApiKey(): string | undefined {
-  let key = process.env.GEMINI_API_KEY
-  if (key) {
-    key = key.trim()
-    if (key.startsWith('"') && key.endsWith('"')) {
-      key = key.slice(1, -1).trim()
+let apiKeys: string[] = []
+let currentKeyIndex = 0
+
+export function loadApiKeys() {
+  if (apiKeys.length === 0) {
+    let raw = process.env.GEMINI_API_KEY || ''
+    raw = raw.trim()
+    if (raw.startsWith('"') && raw.endsWith('"')) {
+      raw = raw.slice(1, -1).trim()
+    }
+    apiKeys = raw.split(',').map(k => k.trim()).filter(k => k.length > 0)
+    
+    // Also check for GEMINI_API_KEY_2, _3 etc
+    for (let i = 2; i <= 10; i++) {
+      let extra = process.env[`GEMINI_API_KEY_${i}`]
+      if (extra && extra.trim()) {
+        apiKeys.push(extra.trim())
+      }
     }
   }
-  return key
+  return apiKeys
 }
 
-function getClient() {
+export function getApiKey(): string | undefined {
+  const keys = loadApiKeys()
+  if (keys.length === 0) return undefined
+  if (currentKeyIndex >= keys.length) currentKeyIndex = 0
+  return keys[currentKeyIndex]
+}
+
+export function rotateApiKey() {
+  const keys = loadApiKeys()
+  if (keys.length > 0) {
+    currentKeyIndex = (currentKeyIndex + 1) % keys.length
+    console.log(`[Gemini] Switched to API key index ${currentKeyIndex}`)
+  }
+}
+
+export function getClient() {
   const apiKey = getApiKey()
   if (!apiKey) {
     throw new GeminiProviderError('Gemini API key is not configured.')
@@ -106,39 +133,54 @@ export class GeminiTextProvider implements TextProvider {
     }
   }
 
-  async generateText(options: TextGenerationOptions): Promise<TextGenerationResult> {
-    const ai = getClient()
-    const model = options.model ?? DEFAULT_TEXT_MODEL
+    async generateText(options: TextGenerationOptions): Promise<TextGenerationResult> {
+    const keys = loadApiKeys()
+    const maxAttempts = Math.max(1, keys.length)
+    let attempt = 0
+    let lastError: any = null
 
-    try {
-      const response = await ai.models.generateContent({
-        model,
-        contents: formatMessages(options.messages),
-        config: {
-          temperature: options.temperature ?? 0.7,
-          maxOutputTokens: options.maxTokens ?? 8192,
-          systemInstruction: options.systemPrompt,
+    while (attempt < maxAttempts) {
+      try {
+        const ai = getClient()
+        const model = options.model ?? DEFAULT_TEXT_MODEL
+        
+        const response = await ai.models.generateContent({
+          model,
+          contents: formatMessages(options.messages),
+          config: {
+            temperature: options.temperature ?? 0.7,
+            maxOutputTokens: options.maxTokens ?? 8192,
+            systemInstruction: options.systemPrompt,
+          }
+        })
+
+        return {
+          text: response.text ?? '',
+          model,
+          provider: this.id,
         }
-      })
-
-      return {
-        text: response.text ?? '',
-        model,
-        provider: this.id,
+      } catch (err: any) {
+        lastError = err
+        const msg = err.message || ''
+        if (msg.includes('429') || msg.includes('quota') || msg.includes('RESOURCE_EXHAUSTED')) {
+          console.warn('[Gemini] Quota exhausted for current key. Rotating...')
+          rotateApiKey()
+          attempt++
+          continue
+        } else {
+          throw new GeminiProviderError(msg, err.status?.toString())
+        }
       }
-    } catch (err: any) {
-      console.error('[Gemini generateText Error]', err)
-      throw new GeminiProviderError(err.message, err.status?.toString())
     }
+    
+    throw new GeminiProviderError(lastError?.message || 'All API keys exhausted.', '429')
   }
 
-    async *streamText(options: TextGenerationOptions): AsyncGenerator<string> {
-    const ai = getClient()
-    const model = options.model ?? DEFAULT_TEXT_MODEL
-    const fallbackModel = 'gemini-flash-latest'
-
-    let responseStream;
-    let usedFallback = false;
+      async *streamText(options: TextGenerationOptions): AsyncGenerator<string> {
+    const keys = loadApiKeys()
+    const maxAttempts = Math.max(1, keys.length)
+    let attempt = 0
+    let lastError: any = null
 
     // Timeout helper
     const withTimeout = (promise: Promise<any>, ms: number) => {
@@ -149,24 +191,17 @@ export class GeminiTextProvider implements TextProvider {
       return Promise.race([promise, timeoutPromise]).finally(() => clearTimeout(timeout));
     };
 
-    try {
-      // try primary model with 10s timeout
-      responseStream = await withTimeout(ai.models.generateContentStream({
-        model,
-        contents: formatMessages(options.messages),
-        config: {
-          systemInstruction: options.systemPrompt ? { parts: [{ text: options.systemPrompt }] } : undefined,
-          temperature: options.temperature ?? 0.7,
-          maxOutputTokens: options.maxTokens ?? 8192,
-        }
-      }), 15000);
-    } catch (err: any) {
-      if (err.message === 'TIMEOUT' || String(err.status) === '503' || String(err.status) === 'Service Unavailable' || String(err.code) === '503' || (err.message && err.message.includes('503')) || (err.message && err.message.includes('UNAVAILABLE'))) {
-        console.warn('Primary model failed (timeout or 503), trying fallback:', fallbackModel);
+    while (attempt < maxAttempts) {
+      try {
+        const ai = getClient()
+        const model = options.model ?? DEFAULT_TEXT_MODEL
+        const fallbackModel = 'gemini-flash-latest'
+
+        let responseStream;
+
         try {
-          usedFallback = true;
           responseStream = await withTimeout(ai.models.generateContentStream({
-            model: fallbackModel,
+            model,
             contents: formatMessages(options.messages),
             config: {
               systemInstruction: options.systemPrompt ? { parts: [{ text: options.systemPrompt }] } : undefined,
@@ -174,27 +209,49 @@ export class GeminiTextProvider implements TextProvider {
               maxOutputTokens: options.maxTokens ?? 8192,
             }
           }), 15000);
-        } catch (err2: any) {
-           throw new GeminiProviderError(err2.message || 'Stream timeout', err2.status?.toString());
+        } catch (err: any) {
+          if (err.message === 'TIMEOUT' || String(err.status) === '503' || String(err.code) === '503' || (err.message && err.message.includes('503'))) {
+            responseStream = await withTimeout(ai.models.generateContentStream({
+              model: fallbackModel,
+              contents: formatMessages(options.messages),
+              config: {
+                systemInstruction: options.systemPrompt ? { parts: [{ text: options.systemPrompt }] } : undefined,
+                temperature: options.temperature ?? 0.7,
+                maxOutputTokens: options.maxTokens ?? 8192,
+              }
+            }), 15000);
+          } else {
+            throw err
+          }
         }
-      } else {
-        throw new GeminiProviderError(err.message, err.status?.toString())
+
+        for await (const chunk of responseStream) {
+          if (chunk.text) {
+            yield chunk.text
+          }
+        }
+        return; // Success!
+
+      } catch (err: any) {
+        lastError = err
+        const msg = err.message || ''
+        if (msg.includes('429') || msg.includes('quota') || msg.includes('RESOURCE_EXHAUSTED')) {
+          console.warn('[Gemini] Quota exhausted for current key. Rotating to next key...')
+          rotateApiKey()
+          attempt++
+          continue
+        } else {
+          throw new GeminiProviderError(msg, err.status?.toString())
+        }
       }
     }
-
-    try {
-      for await (const chunk of responseStream) {
-        if (chunk.text) {
-          yield chunk.text
-        }
-      }
-    } catch (err: any) {
-      throw new GeminiProviderError(err.message, err.status?.toString())
-    }
-  }
+    
+    throw new GeminiProviderError(lastError?.message || 'All API keys exhausted their quotas.', '429')
   }
 
-  export class GeminiVisionProvider implements VisionProvider {
+  } 
+
+export class GeminiVisionProvider implements VisionProvider {
   readonly id = 'gemini'
   private textProvider = new GeminiTextProvider()
 
@@ -510,3 +567,7 @@ export class GeminiVideoProvider implements VideoProvider {
     }
   }
 }
+
+
+
+
