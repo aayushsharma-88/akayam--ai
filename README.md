@@ -12,8 +12,8 @@ Akayam AI is a production-grade, full-stack AI platform built with Next.js 16, T
 |---|---|
 | **Chat** | Streaming AI chat, conversation history, search, pin, archive |
 | **Vision** | Image upload and analysis, multi-image comparison |
-| **Image Generation** | (Not supported yet) image generation with download/save |
-| **Voice** | Speech-to-text ((Not supported yet)), text-to-speech (Google Gemini TTS) |
+| **Image Generation** | Coming Soon image generation with download/save |
+| **Voice** | Speech-to-text (Coming Soon), text-to-speech (Google Gemini TTS) |
 | **Documents** | PDF, DOCX, TXT, CSV upload and analysis |
 | **Data** | CSV/JSON/XLSX parsing, chart generation (Recharts) |
 | **Code** | Syntax-highlighted code generation with copy button |
@@ -35,8 +35,8 @@ Akayam AI is a production-grade, full-stack AI platform built with Next.js 16, T
 | Database | PostgreSQL + Prisma ORM |
 | Authentication | NextAuth.js v5 |
 | AI (Text/Vision) | Google Gemini gemini-2.5-flash |
-| AI (Images) | Google Gemini (Not supported yet) |
-| AI (Speech) | Google Gemini (Not supported yet) + TTS |
+| AI (Images) | Google Gemini Coming Soon |
+| AI (Speech) | Google Gemini Coming Soon + TTS |
 | Charts | Recharts |
 | Markdown | react-markdown + rehype-highlight |
 | File Storage | Local filesystem (dev), S3-compatible (production) |
@@ -166,7 +166,7 @@ See [`.env.example`](.env.example) for the complete list.
 
 | Variable | Provider | Features |
 |---|---|---|
-| `GEMINI_API_KEY` | Google Gemini | Chat, vision, DALL-E, (Not supported yet), TTS |
+| `GEMINI_API_KEY` | Google Gemini | Chat, vision, DALL-E, Coming Soon, TTS |
 
 ### Storage
 
@@ -221,8 +221,8 @@ Akayam AI uses a **provider abstraction layer** so you can swap or add AI provid
 
 - `Google GeminiTextProvider` — gemini-2.5-flash chat
 - `Google GeminiVisionProvider` — gemini-2.5-flash vision
-- `Google GeminiImageProvider` — (Not supported yet)
-- `Google GeminiSpeechProvider` — (Not supported yet) STT
+- `Google GeminiImageProvider` — Coming Soon
+- `Google GeminiSpeechProvider` — Coming Soon STT
 - `Google GeminiTTSProvider` — Google Gemini TTS
 
 ### Adding a New Provider
