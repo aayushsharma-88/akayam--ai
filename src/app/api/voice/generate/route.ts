@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { requireAuth } from '@/lib/auth/auth-utils'
 import { prisma } from '@/lib/db/prisma'
 import { getStorage } from '@/lib/storage/storage'
-import { getKokoroInstance, encodeWAV } from '@/lib/ai/providers/kokoro-local'
+import { getTTSProvider } from '@/lib/ai/router'
 import crypto from 'crypto'
 
 export async function POST(req: Request) {
@@ -18,58 +18,45 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Voice is required' }, { status: 400 })
     }
 
-    // Truncate to reasonable length to prevent memory issues with local inference
-    const textToSpeak = text.substring(0, 2000).trim()
+    const textToSpeak = text.substring(0, 4000).trim()
     if (!textToSpeak) {
       return NextResponse.json({ error: 'Text cannot be empty' }, { status: 400 })
     }
 
-    // 1. Check cache (using a hash of text + voice + version)
-    const hash = crypto.createHash('sha256').update(`${textToSpeak}-${voice}-kokoro-v1.0`).digest('hex')
-    const cacheKey = `tts_${hash}.wav`
-    const storagePath = `audio/kokoro/${cacheKey}`
+    const hash = crypto.createHash('sha256').update(${textToSpeak}--gemini-v1.0).digest('hex')
+    const cacheKey = 	ts_.mp3
+    const storagePath = udio/voice/
 
-    // Check if we already have this exact audio in the DB (for this user, or globally)
-    // We can just query the File table by filename/storageKey
     const existingFile = await prisma.file.findFirst({
       where: { storageKey: storagePath, fileType: 'AUDIO' }
     })
 
     if (existingFile) {
       return NextResponse.json({ 
-        url: `/api/files/serve/${encodeURIComponent(existingFile.storageKey)}` 
+        url: /api/files/serve/ 
       })
     }
 
-    // 2. Generate new audio locally using Kokoro
-    let audioData
-    try {
-      const tts = await getKokoroInstance()
-      audioData = await tts.generate(textToSpeak, { voice })
-    } catch (err: any) {
-      console.error('[Kokoro Generation Error]', err)
-      return NextResponse.json({ error: err.message || 'Failed to generate voice' }, { status: 500 })
+    const ttsProvider = getTTSProvider()
+    if (!ttsProvider.isConfigured()) {
+      return NextResponse.json({ error: 'TTS provider is not configured. Please add GEMINI_API_KEY.' }, { status: 501 })
     }
 
-    if (!audioData || !audioData.audio) {
-      return NextResponse.json({ error: 'Model produced no audio output' }, { status: 500 })
-    }
+    const ttsResult = await ttsProvider.synthesize({
+      text: textToSpeak,
+      voice: voice,
+      speed: 1.0,
+    })
 
-    const pcm = audioData.audio
-    const sampleRate = audioData.sampling_rate
-    const wavBuffer = encodeWAV(pcm, sampleRate)
-
-    // 3. Save to storage
     const storage = getStorage()
-    const storedFile = await storage.put(storagePath, wavBuffer, 'audio/wav')
+    const storedFile = await storage.put(storagePath, ttsResult.audioBuffer, ttsResult.mimeType)
 
-    // 4. Save to DB
     const dbFile = await prisma.file.create({
       data: {
         userId: user.id,
         filename: cacheKey,
-        originalName: 'kokoro_voice.wav',
-        mimeType: 'audio/wav',
+        originalName: 'voice_generation.mp3',
+        mimeType: ttsResult.mimeType,
         size: storedFile.size,
         storageKey: storagePath,
         fileType: 'AUDIO',
@@ -78,7 +65,7 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ 
-      url: `/api/files/serve/${encodeURIComponent(dbFile.storageKey)}` 
+      url: /api/files/serve/ 
     })
 
   } catch (error: any) {
