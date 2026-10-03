@@ -3,7 +3,7 @@
     "id": "gita",
     "name": "Bhagavad Gita",
     "titleHindi": "श्रीमद्भगवद्गीता",
-    "image": "https://images.unsplash.com/photo-1718047053531-1550cbb91a5e?w=800&q=80",
+    "image": "/gita.jpg",
     "themeGlow": "from-orange-500/50 via-amber-500/40 to-yellow-500/50",
     "intro": "The Bhagavad Gita is a 700-verse Hindu scripture that is part of the epic Mahabharata. It is a narrative framework of a dialogue between Pandava prince Arjuna and his guide and charioteer Krishna.",
     "lessons": [
@@ -72,7 +72,7 @@
     "id": "shivpurana",
     "name": "Shiv Mahapurana",
     "titleHindi": "शिव महापुराण",
-    "image": "https://images.unsplash.com/photo-1675597056623-74d1e05dc3f0?w=800&q=80",
+    "image": "/shivpurana.jpg",
     "themeGlow": "from-blue-600/50 via-cyan-500/40 to-teal-500/50",
     "intro": "The Shiva Purana is one of the eighteen major Puranas of Hinduism. It centers around the Hindu god Shiva and goddess Parvati, containing extensive cosmology, mythology, and philosophy.",
     "lessons": [
@@ -102,7 +102,7 @@
     "id": "vedas",
     "name": "The Vedas",
     "titleHindi": "वेद (ऋग्वेद एवं उपनिषद)",
-    "image": "https://images.unsplash.com/photo-1698297076632-f3e1a8a25c78?w=800&q=80",
+    "image": "/vedas.jpg",
     "themeGlow": "from-amber-600/50 via-orange-500/40 to-red-500/50",
     "intro": "The Vedas are a large body of religious texts originating in ancient India. Composed in Vedic Sanskrit, the texts constitute the oldest layer of Sanskrit literature and the oldest scriptures of Hinduism.",
     "lessons": [
