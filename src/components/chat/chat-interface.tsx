@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation'
 import { InputBar } from './input-bar'
 import { ChatMessage } from './message'
 import { PendingMessageSender } from './pending-message-sender'
-import { ButterflyAnimation } from '@/components/animations/butterfly'
 import { AkayamLogo } from '@/components/brand/logo'
 import type { AuthUser } from '@/lib/auth/auth.types'
 
@@ -248,22 +247,7 @@ export function ChatInterface({ conversation, user }: ChatInterfaceProps) {
             />
           ))}
 
-          {/* Butterfly thinking animation when waiting for first token */}
-          {isLoading && messages[messages.length - 1]?.content === '' && (
-            <div className="flex gap-3 w-full group">
-              <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 relative">
-                <div className="absolute inset-0 bg-yellow-500/10 rounded-full blur-[6px]" />
-                <img 
-                  src="/ai-avatar.png" 
-                  alt="Akayam" 
-                  className="w-10 h-10 object-contain relative z-10 mix-blend-screen scale-125 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]"
-                />
-              </div>
-              <div className="pt-2 pl-1">
-                <ButterflyAnimation state="thinking" />
-              </div>
-            </div>
-          )}
+
 
           <div ref={messagesEndRef} className="h-2" />
         </div>
@@ -287,3 +271,4 @@ export function ChatInterface({ conversation, user }: ChatInterfaceProps) {
     </div>
   )
 }
+

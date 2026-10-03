@@ -3,6 +3,7 @@
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { Copy, RefreshCw, ThumbsUp, ThumbsDown, Volume2, Check, Loader2, Square } from 'lucide-react'
 import { MarkdownRenderer } from './markdown-renderer'
+import { ButterflyAnimation } from '@/components/animations/butterfly'
 import { cn } from '@/lib/utils'
 
 interface Msg {
@@ -144,14 +145,7 @@ export function ChatMessage({ message, onCopy, onRegenerate }: ChatMessageProps)
           'text-[15px] leading-relaxed',
           message.isError ? 'text-red-400' : 'text-white/90'
         )}>
-          {message.isStreaming && message.content === '' ? (
-            // Blinking cursor while waiting for first token
-            <span className="inline-flex items-center gap-1 text-white/40 text-sm">
-              <span className="animate-pulse">●</span>
-              <span className="animate-pulse delay-150">●</span>
-              <span className="animate-pulse delay-300">●</span>
-            </span>
-          ) : (
+          {message.isStreaming && message.content === '' ? ( <div className="pt-2"><ButterflyAnimation state="thinking" /></div> ) : (
             <MarkdownRenderer content={message.content} />
           )}
           {/* Streaming cursor at end of text */}
@@ -221,3 +215,4 @@ function ActionBtn({ icon, label, onClick, active }: {
     </button>
   )
 }
+
