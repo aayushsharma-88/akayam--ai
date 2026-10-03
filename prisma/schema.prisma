@@ -1,0 +1,511 @@
+// AKAYAM AI — Prisma Database Schema
+// PostgreSQL database with full relational model
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────
+// AUTH & USERS
+// ─────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  phone         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // hashed, null for OAuth users
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Relations
+  accounts      Account[]
+  sessions      Session[]
+  profile       Profile?
+  conversations Conversation[]
+  projects      Project[]
+  projectMembers ProjectMember[]
+  files         File[]
+  generatedAssets GeneratedAsset[]
+  memories      Memory[]
+  savedPrompts  SavedPrompt[]
+  usageRecords  Usage[]
+  feedbacks     Feedback[]
+  notifications Notification[]
+  preferences   UserPreference?
+  bookmarks     Bookmark[]
+
+  @@index([email])
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  ADMIN
+  DEVELOPER
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ─────────────────────────────────────────────
+// PROFILE
+// ─────────────────────────────────────────────
+
+model Profile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  displayName String?
+  bio         String?
+  avatarUrl   String?
+  timezone    String?
+  language    String   @default("en")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("profiles")
+}
+
+// ─────────────────────────────────────────────
+// PROJECTS & WORKSPACES
+// ─────────────────────────────────────────────
+
+model Project {
+  id          String   @id @default(cuid())
+  userId      String
+  name        String
+  description String?
+  color       String?
+  icon        String?
+  isArchived  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  members       ProjectMember[]
+  conversations Conversation[]
+  files         File[]
+  generatedAssets GeneratedAsset[]
+
+  @@index([userId])
+  @@map("projects")
+}
+
+model ProjectMember {
+  id        String      @id @default(cuid())
+  projectId String
+  userId    String
+  role      ProjectRole @default(VIEWER)
+  joinedAt  DateTime    @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+  @@map("project_members")
+}
+
+enum ProjectRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+// ─────────────────────────────────────────────
+// CONVERSATIONS & MESSAGES
+// ─────────────────────────────────────────────
+
+model Conversation {
+  id          String             @id @default(cuid())
+  userId      String
+  projectId   String?
+  title       String?
+  model       String?
+  provider    String?
+  isPinned    Boolean            @default(false)
+  isArchived  Boolean            @default(false)
+  isShared    Boolean            @default(false)
+  shareToken  String?            @unique
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project   Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  messages  Message[]
+
+  @@index([userId])
+  @@index([userId, updatedAt(sort: Desc)])
+  @@index([shareToken])
+  @@map("conversations")
+}
+
+model Message {
+  id             String      @id @default(cuid())
+  conversationId String
+  role           MessageRole
+  content        String      @db.Text
+  contentType    ContentType @default(TEXT)
+  model          String?
+  provider       String?
+  tokenCount     Int?
+  isEdited       Boolean     @default(false)
+  parentId       String?     // for branching/editing
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  attachments  Attachment[]
+  feedbacks    Feedback[]
+  bookmarks    Bookmark[]
+
+  @@index([conversationId])
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum ContentType {
+  TEXT
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  CODE
+  DATA
+  CHART
+}
+
+// ─────────────────────────────────────────────
+// FILES & ATTACHMENTS
+// ─────────────────────────────────────────────
+
+model File {
+  id           String     @id @default(cuid())
+  userId       String
+  projectId    String?
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int        // bytes
+  storageKey   String     // object storage key/path
+  storageUrl   String?    // public URL if applicable
+  fileType     FileType
+  status       FileStatus @default(UPLOADING)
+  metadata     Json?      // extracted metadata, dimensions, etc.
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project     Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  attachments Attachment[]
+
+  @@index([userId])
+  @@index([userId, fileType])
+  @@map("files")
+}
+
+enum FileType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  DATA
+  OTHER
+}
+
+enum FileStatus {
+  UPLOADING
+  PROCESSING
+  READY
+  FAILED
+}
+
+model Attachment {
+  id        String   @id @default(cuid())
+  messageId String
+  fileId    String
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  file    File    @relation(fields: [fileId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@map("attachments")
+}
+
+// ─────────────────────────────────────────────
+// GENERATED ASSETS
+// ─────────────────────────────────────────────
+
+model GeneratedAsset {
+  id           String          @id @default(cuid())
+  userId       String
+  projectId    String?
+  type         AssetType
+  provider     String
+  model        String?
+  prompt       String?         @db.Text
+  negativePrompt String?       @db.Text
+  status       GenerationStatus @default(QUEUED)
+  storageKey   String?
+  storageUrl   String?
+  thumbnailUrl String?
+  metadata     Json?           // width, height, duration, format, etc.
+  errorMessage String?
+  jobId        String?         // external provider job ID
+  retryCount   Int             @default(0)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+  completedAt  DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([userId, type])
+  @@index([status])
+  @@map("generated_assets")
+}
+
+enum AssetType {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  CHART
+}
+
+enum GenerationStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+// ─────────────────────────────────────────────
+// MEMORY
+// ─────────────────────────────────────────────
+
+model Memory {
+  id        String     @id @default(cuid())
+  userId    String
+  content   String     @db.Text
+  category  String?
+  source    MemorySource @default(CONVERSATION)
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isActive])
+  @@map("memories")
+}
+
+enum MemorySource {
+  CONVERSATION
+  MANUAL
+  INFERENCE
+}
+
+// ─────────────────────────────────────────────
+// SAVED PROMPTS & BOOKMARKS
+// ─────────────────────────────────────────────
+
+model SavedPrompt {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String
+  content   String   @db.Text
+  category  String?
+  tags      String[] @default([])
+  useCount  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("saved_prompts")
+}
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  messageId String
+  note      String?
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, messageId])
+  @@index([userId])
+  @@map("bookmarks")
+}
+
+// ─────────────────────────────────────────────
+// USAGE
+// ─────────────────────────────────────────────
+
+model Usage {
+  id             String   @id @default(cuid())
+  userId         String
+  provider       String
+  model          String
+  inputTokens    Int      @default(0)
+  outputTokens   Int      @default(0)
+  totalTokens    Int      @default(0)
+  requestType    String   // chat, image, video, speech, etc.
+  costEstimate   Float?   // in USD
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@map("usage")
+}
+
+// ─────────────────────────────────────────────
+// FEEDBACK & NOTIFICATIONS
+// ─────────────────────────────────────────────
+
+model Feedback {
+  id        String       @id @default(cuid())
+  userId    String
+  messageId String
+  type      FeedbackType
+  comment   String?
+  createdAt DateTime     @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, messageId])
+  @@index([userId])
+  @@map("feedbacks")
+}
+
+enum FeedbackType {
+  THUMBS_UP
+  THUMBS_DOWN
+  REPORT
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  data      Json?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  GENERATION_COMPLETE
+  GENERATION_FAILED
+  SYSTEM
+  SHARE
+}
+
+// ─────────────────────────────────────────────
+// USER PREFERENCES
+// ─────────────────────────────────────────────
+
+model UserPreference {
+  id                   String   @id @default(cuid())
+  userId               String   @unique
+  theme                Theme    @default(DARK)
+  language             String   @default("en")
+  animationLevel       AnimationLevel @default(FULL)
+  voiceEnabled         Boolean  @default(false)
+  autoSpeak            Boolean  @default(false)
+  voiceId              String?
+  voiceSpeed           Float    @default(1.0)
+  memoryEnabled        Boolean  @default(true)
+  defaultModel         String?
+  defaultProvider      String?
+  messageDisplayDensity String  @default("comfortable")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_preferences")
+}
+
+enum Theme {
+  DARK
+  LIGHT
+  SYSTEM
+}
+
+enum AnimationLevel {
+  FULL
+  REDUCED
+  OFF
+}

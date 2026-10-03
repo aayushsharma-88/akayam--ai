@@ -1,0 +1,1 @@
+const res = await fetch("http://127.0.0.1:3000/api/voice/generate", { method: "POST", headers: { "Content-Type": "application/json", "x-test-bypass": "true" }, body: JSON.stringify({ text: "Hello from local API after fixing paths", voice: "af_heart" }) }); console.log(res.status); console.log(await res.text());
