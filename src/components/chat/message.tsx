@@ -128,8 +128,14 @@ export function ChatMessage({ message, onCopy, onRegenerate }: ChatMessageProps)
   return (
     <div className="flex gap-3 w-full group">
       {/* Akayam avatar */}
-      <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-cyan-500 to-violet-600 flex-shrink-0 flex items-center justify-center shadow-lg shadow-cyan-500/15 mt-0.5">
-        <span className="text-white text-xs font-bold tracking-tight">A</span>
+      <div className="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-0.5 relative">
+        {/* Subtle glow behind the avatar matching the golden theme */}
+        <div className="absolute inset-0 bg-yellow-500/10 rounded-full blur-[6px]" />
+        <img 
+          src="/ai-avatar.png" 
+          alt="Akayam" 
+          className="w-10 h-10 object-contain relative z-10 mix-blend-screen scale-125 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]"
+        />
       </div>
 
       <div className="flex-1 min-w-0">
