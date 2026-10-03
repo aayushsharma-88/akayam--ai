@@ -80,7 +80,7 @@ export function HomeContent({ user }: HomeContentProps) {
           </div>
 
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mt-1">
-            स्वागतम् (Swagatam){firstName ? (
+            स्वागतम्{firstName ? (
               <>, <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-violet-400">{firstName}</span></>
             ) : null}
           </h1>
