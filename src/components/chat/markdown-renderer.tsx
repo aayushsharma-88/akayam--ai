@@ -42,12 +42,12 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
               </code>
             )
           },
-          img: ({src, alt}) => src ? (
+          img: ({src, alt}: any) => src ? (
             <span className="relative group inline-block max-w-full">
-              <img src={src} alt={alt || ''} className="rounded-lg max-w-full my-4 border border-white/10 block" />
+              <img src={src as string} alt={(alt as string) || ''} className="rounded-lg max-w-full my-4 border border-white/10 block" />
               <a 
-                href={src} 
-                download={alt ? `${alt}.jpg` : 'image-download.jpg'} 
+                href={src as string} 
+                download={alt ? `${alt as string}.jpg` : 'image-download.jpg'} 
                 target="_blank"
                 rel="noreferrer"
                 className="absolute top-6 right-2 p-2 bg-black/60 hover:bg-black/80 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity backdrop-blur-sm"
@@ -57,7 +57,7 @@ export function MarkdownRenderer({ content, className }: MarkdownRendererProps) 
               </a>
             </span>
           ) : null,
-          audio: ({src}) => src ? <audio src={src} controls className="w-full my-4" /> : null,
+          audio: ({src}: any) => src ? <audio src={src as string} controls className="w-full my-4" /> : null,
           p: ({children}) => <p className="mb-4 last:mb-0 text-white/90">{children}</p>,
           a: ({children, href}) => <a href={href} className="text-cyan-400 hover:underline">{children}</a>,
           ul: ({children}) => <ul className="list-disc pl-4 mb-4 text-white/90 space-y-1">{children}</ul>,

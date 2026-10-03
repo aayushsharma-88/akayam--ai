@@ -27,7 +27,7 @@ class LocalStorageProvider implements StorageProvider {
   private baseUrl: string
 
   constructor() {
-    this.baseDir = join(process.cwd(), process.env.STORAGE_LOCAL_PATH ?? 'uploads')
+    this.baseDir = join(/*turbopackIgnore: true*/ process.cwd(), process.env.STORAGE_LOCAL_PATH ?? 'uploads')
     this.baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
   }
 
