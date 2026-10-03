@@ -25,10 +25,24 @@ export async function GET(
       return new NextResponse('Unauthorized', { status: 403 })
     }
     
-    const filePath = join(/*turbopackIgnore: true*/ process.cwd(), file.storageKey)
-    const fileBuffer = await readFile(filePath)
+    let fileBuffer: Buffer | null = null
+
+    if (file.metadata && typeof file.metadata === 'object' && 'base64' in file.metadata) {
+      fileBuffer = Buffer.from((file.metadata as any).base64, 'base64')
+    } else {
+      try {
+        const filePath = join(/*turbopackIgnore: true*/ process.cwd(), file.storageKey)
+        fileBuffer = await readFile(filePath)
+      } catch (e) {
+        console.error('Failed to read file from local storage', e)
+      }
+    }
+
+    if (!fileBuffer) {
+      return new NextResponse('File not found on server', { status: 404 })
+    }
     
-    return new NextResponse(fileBuffer, {
+    return new NextResponse(fileBuffer as any, {
       headers: {
         'Content-Type': file.mimeType,
         'Content-Disposition': `inline; filename="${file.originalName}"`

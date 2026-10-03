@@ -61,11 +61,21 @@ export async function POST(req: NextRequest) {
     const filename = `${fileId}${ext}`
     const relativePath = `uploads/${user.id}/${filename}`
     
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    let base64Data: string | undefined
+
     if (storageProvider === 'local') {
-      const uploadDir = join(process.cwd(), 'uploads', user.id)
-      await mkdir(uploadDir, { recursive: true })
-      const bytes = await file.arrayBuffer()
-      await writeFile(join(process.cwd(), relativePath), Buffer.from(bytes))
+      try {
+        const uploadDir = join(process.cwd(), 'uploads', user.id)
+        await mkdir(uploadDir, { recursive: true })
+        await writeFile(join(process.cwd(), relativePath), buffer)
+      } catch (e) {
+        // Vercel serverless functions have read-only filesystems.
+        // We will store the file in the database metadata instead.
+        console.warn('Local filesystem write failed, using DB storage fallback.')
+      }
+      base64Data = buffer.toString('base64')
     }
     
     const projectId = formData.get('projectId') as string | null
@@ -82,6 +92,7 @@ export async function POST(req: NextRequest) {
         storageUrl: `/api/files/${fileId}`,
         fileType: getFileType(file.type),
         status: 'READY',
+        metadata: base64Data ? { base64: base64Data } : undefined,
       },
     })
     

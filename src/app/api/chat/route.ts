@@ -69,6 +69,11 @@ export async function POST(req: NextRequest) {
           if (fileId) {
             const dbFile = await prisma.file.findUnique({ where: { id: fileId } })
             if (dbFile) {
+              if (dbFile.metadata && typeof dbFile.metadata === 'object' && 'base64' in dbFile.metadata) {
+                const base64 = (dbFile.metadata as any).base64
+                processedImageUrls.push(`data:${dbFile.mimeType};base64,${base64}`)
+                continue
+              }
               const filePath = join(/*turbopackIgnore: true*/ process.cwd(), dbFile.storageKey)
               try {
                 const buffer = await readFile(filePath)
