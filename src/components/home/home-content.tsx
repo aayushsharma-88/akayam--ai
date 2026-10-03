@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Camera, Image as ImageIcon, Film, Mic, BarChart2, PenTool, Code2, FileText } from 'lucide-react'
 import { InputBar } from '@/components/chat/input-bar'
 import { cn } from '@/lib/utils'
@@ -67,17 +68,17 @@ export function HomeContent({ user }: HomeContentProps) {
 
         {/* Saraswati Mata + Greeting */}
         <div className="flex flex-col items-center text-center gap-4">
-          <div className="relative animate-float mt-2 mb-2">
+                    <Link href="/devotion/saraswati" className="relative animate-float mt-2 mb-2 group block cursor-pointer transition-transform duration-500 hover:scale-110">
             {/* Soft glowing aura matching Akayam colors */}
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/40 via-blue-500/30 to-violet-500/40 blur-[50px] rounded-full animate-pulse-glow" />
+            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/40 via-blue-500/30 to-violet-500/40 blur-[50px] rounded-full animate-pulse-glow group-hover:from-amber-400/50 group-hover:via-yellow-500/40 group-hover:to-orange-500/50 transition-colors duration-500" />
             
             {/* mix-blend-screen removes the black background and brightens the white lines */}
             <img 
               src="/saraswati.png" 
               alt="Saraswati Mata" 
-              className="w-40 h-40 sm:w-48 sm:h-48 object-contain relative z-10 mix-blend-screen opacity-90 drop-shadow-[0_0_15px_rgba(96,212,245,0.6)]"
+              className="w-40 h-40 sm:w-48 sm:h-48 object-contain relative z-10 mix-blend-screen opacity-90 drop-shadow-[0_0_15px_rgba(96,212,245,0.6)] group-hover:drop-shadow-[0_0_25px_rgba(255,215,0,0.8)] transition-all duration-500"
             />
-          </div>
+          </Link>
 
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-white mt-1">
             स्वागतम्{firstName ? (
@@ -131,3 +132,5 @@ export function HomeContent({ user }: HomeContentProps) {
     </div>
   )
 }
+
+
